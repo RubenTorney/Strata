@@ -1,0 +1,4 @@
+{"variant": "stack2", "engine": 0, "shas": ["58907c1fa97d7e0d", "57d82fc492c4afa3", "2b01bb08605bfba8", "ed7f8084e492aa6d", "0820552d54bdd24b", "b410ea6cb9f93ef0"]}
+{"variant": "stack2", "engine": 1, "shas": ["39d83e4150222966", "d16ba17605a64957", "bc92a8b316474c05", "23f617b96a99b16e", "2e03fb44f0965847", "b3f8f86ea5bd5213"]}
+{"variant": "loc", "engine": 0, "shas": ["965d3613a972e74b", "57d82fc492c4afa3", "fd9767c97ee69139", "48074b0210a7d4b6", "e0e794394babb997", "d2f0c60046606474"]}
+{"variant": "loc", "engine": 1, "shas": ["965d3613a972e74b", "f094425f94e0e4a4", "2091239b3edc5271", "710e9d530256943c", "af807ee325f9f95e", "3b978ae0dae393ae"]}

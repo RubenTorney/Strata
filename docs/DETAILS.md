@@ -177,6 +177,23 @@ other ~18 GB), a 32 GB PC with a 12-16 GB GPU the Coder; IQ3_XXS on a 32 GB PC s
   rounds differently from the CPU) depends on when its copy lands.
   It stays on the blocking tier (said in the log) when the exchange buffers are not page-locked; the stats line
   reports ms per round.
+- **The arena too** (branch `perf/async-adapt-arena`): with every expert loaded in RAM (the default arena, one GPU, no
+  layer split) `--adapt-async 1` runs the same tier copy-in only: there is nothing to copy back or move into RAM, the evicted
+  slot is marked non-resident before the round's copies are posted and an expert becomes resident only once its copy has
+  landed (`STRATA_ADAPT_ASYNC_WAIT=1`, the default there, waits for the round at the next tick, so the window an expert
+  turns GPU-resident does not depend on timing). The pick runs inline on the host thread (`STRATA_ADAPT_PICK_INLINE=1`,
+  one round per window). `STRATA_ADAPT_ASYNC_BATCH=N` posts at most N copies per tick (default 0 = all; 16 measured 16 %
+  slower), `STRATA_ADAPT_ASYNC_DEMAND=1` sizes rounds from the last window's CPU misses (inert at 50+ misses a window),
+  `STRATA_ADAPT_BOUNCE=1` copies the blobs outside the page-locked part through a pinned bounce buffer (no gain measured).
+  Every K/V grow and the `VRAM` command now wait for the round in flight (`adapt_quiesce`). RTX 3090 + Ryzen 5 5600X:
+  +11 % decode on cold prompts (21.6 instead of 25.9 ms a window),
+  [results](../bench/results/2026-10-11-rtx3090-5600x-async-arena/README.md).
+- **Pin by need** (`STRATA_PIN_BY_NEED=1`, opt-in, arena, one GPU): Windows page-locks at most ~half the RAM (the WDDM
+  shared budget), so the arena used to lock its first ~30 GiB (layers 0-31) and layers 32-47 had no PCIe share at all.
+  With the variable the arena gives every blob a page-aligned stride (+0.15 % RAM) and registers the expert profile's
+  non-GPU-resident experts by rank instead, up to `STRATA_ARENA_PIN_GIB` (29 by default on Windows): every layer gets a
+  PCIe share. `STRATA_PCIE_MIN1=1` sends one miss over PCIe as soon as a layer has two (the share otherwise rounds to 0
+  at 1-2 misses). With `--pcie-frac 0.6`: +2-3 % cold decode and +6 % prompt reading at 63K on the RTX 3090 above.
 - `STRATA_EXCHANGE_ROTATE=1` (opt-in): an adaptive swap hands buffer ownership over instead of copying the evicted
   blob into the RAM copy (equal-size blobs, fully page-locked copy). Same tokens, fewer host copies; it works with
   `--adapt-async 1` too. Details and the measurement: [EXCHANGE_ROTATION.md](EXCHANGE_ROTATION.md).

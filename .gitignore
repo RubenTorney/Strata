@@ -61,3 +61,7 @@ build-vision-cuda12.bat
 
 /.ccache/
 /.rocm-win/
+bin-r2a/
+bin-current/
+build-vs22/
+build-dev/
