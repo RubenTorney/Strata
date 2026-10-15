@@ -8,6 +8,31 @@ No frontend framework, external CDN, online account or new Python dependency.
 
 **Maintainers:** [complete architecture, API, storage and lifecycle guide](MAINTAINER.md).
 
+## Interface preview
+
+Desktop captures at **1440 × 1000**, shown individually at full README width.
+Click an image to open its original size.
+
+**Browse and compare configurations.** Detected hardware, filters, favorites and local
+comparison results are visible in the same workspace. Imported results remain labeled
+as unverified on this PC.
+
+[![Community configuration library with hardware detection, filters and comparison cards](screenshots/community-library.jpg)](screenshots/community-library.jpg)
+
+**Share your setup.** Hardware, loaded model and tuning are captured automatically;
+only a name is required. Hardware corrections and advanced settings stay expandable.
+
+[![Share your setup dialog with automatically detected hardware and model information](screenshots/share-configuration.jpg)](screenshots/share-configuration.jpg)
+
+**Inspect a benchmark.** Saved comparisons show per-request latency charts, token counts
+and total request time, with selectable generation, RAM and VRAM metrics.
+
+[![Desktop benchmark results comparing first-token latency for 4K and 16K prompts](screenshots/benchmark-comparison.jpg)](screenshots/benchmark-comparison.jpg)
+
+Captured on 15 October 2026 from the local Community deployment using the **0.1.44
+engine**; these web assets are unchanged in the 0.1.44.1 port. The screenshots show
+existing measurements, not a new benchmark run or a recommended configuration.
+
 ## Start
 
 Use the Python environment you already use for Strata, from this checkout:
