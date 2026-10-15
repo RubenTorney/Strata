@@ -1,6 +1,8 @@
 # Community configurations — local V0
 
-An opt-in extension of the existing Strata 0.1.44 portal. It reuses Outfit, Strata's
+An opt-in extension of the existing Strata **0.1.44.1** portal, on the
+[`community` branch of RubenTorney/Strata](https://github.com/RubenTorney/Strata/tree/community).
+It reuses Outfit, Strata's
 CSS tokens, cards, tabs, buttons, light/dark themes, authentication and telemetry.
 No frontend framework, external CDN, online account or new Python dependency.
 
@@ -178,13 +180,14 @@ access, server-side rate limits and provenance; do not treat today's personal st
 ## Validation
 
 ```sh
-python -m unittest serve.test_community serve.test_runconfig serve.test_security serve.test_lifecycle serve.test_server tools.test_strata_bench -q
+python -m unittest serve.test_community serve.test_runconfig serve.test_security serve.test_lifecycle serve.test_server serve.test_effort_paths tools.test_strata_bench -q
 ```
 
-The latest regression pass completed **389 tests**. The Community tests cover metadata/import/export,
+The original 0.1.44 regression pass completed **389 tests**. The Community tests cover metadata/import/export,
 heterogeneous rigs, invalid inputs, auth/CSRF, all three repository scenarios, pause/resume/cancel,
 exclusive admission, restoration and one-level undo. The CLI benchmark's existing tests also pass
-after transport injection. Earlier 359/368-test counts refer to earlier revisions, not this one.
+after transport injection. Earlier 359/368-test counts refer to earlier revisions. See the
+0.1.44.1 port section below for the current branch's validation.
 
 Real smoke test on 2026-10-15: RTX 3090 24 GiB, Ryzen 5 5600X, 64 GiB DDR4,
 Qwen3.8-Flash-Next IQ3_S, upstream 0.1.44 binary, configured context 262,144.
@@ -281,3 +284,27 @@ Additional invalid-input testing found and fixed malformed configuration IDs clo
 connection. They now return JSON HTTP 400 before SQL or engine access. The original **389-test**
 regression pass succeeded; after this fix, all **24 focused Community tests** passed, including
 32 malformed-ID requests across four endpoints. The live server was restarted to load the fix.
+
+## Port to the upstream fork — 15 October 2026
+
+The feature now lives on [`RubenTorney/Strata:community`](https://github.com/RubenTorney/Strata/tree/community),
+based on upstream **v0.1.44.1**, commit `296b59d2f73c8f04a805df29c2fa97655adace78`.
+The fork's `main` tracks that unmodified upstream release. The four Community commits
+were replayed on this base; the previous `strata3090:codex/community-configs-0144`
+branch is retained as historical work.
+
+The port keeps the upstream Responses API reasoning-effort and startup fixes. Community
+Python code, web assets and the benchmark transport are identical to the previous
+feature branch; only the server integration receives upstream changes. Engine sources,
+build files and tuning defaults are identical to upstream v0.1.44.1.
+
+The regression command above passed **407 tests in 134.309 seconds**, including the
+upstream reasoning-effort routing tests. Both Community JavaScript files passed
+`node --check`. No CUDA/HIP/SYCL build was needed for this port: engine and build
+files have no diff from upstream. The tests emitted temporary-file `ResourceWarning`s
+but no failures. The Community feature remains opt-in via `--community-db`.
+
+The GPU results and browser checks above were recorded on the original **0.1.44**
+deployment. They have not been rerun on a 0.1.44.1 engine and must not be presented as
+new performance measurements. This Git publication does not restart or upgrade the
+existing live server.

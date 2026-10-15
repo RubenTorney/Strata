@@ -1,7 +1,7 @@
 # Community V0 — maintainer guide
 
-This guide describes the implementation on `codex/community-configs-0144`, based on
-upstream Strata 0.1.44. It is an optional local configuration library and comparison
+This guide describes the implementation on the [`community` branch of RubenTorney/Strata](https://github.com/RubenTorney/Strata/tree/community), based on
+upstream Strata **0.1.44.1** (`296b59d2`). It is an optional local configuration library and comparison
 workspace inside the existing portal. It is not a hosted community service.
 
 For startup commands, the user workflow, benchmark definitions and measured validation,
@@ -307,7 +307,7 @@ Run the existing regression set without GPU downloads:
 
 ```sh
 python -m unittest serve.test_community serve.test_runconfig serve.test_security \
-  serve.test_lifecycle serve.test_server tools.test_strata_bench -q
+  serve.test_lifecycle serve.test_server serve.test_effort_paths tools.test_strata_bench -q
 node --check serve/web/community.js
 node --check serve/web/community-bench.js
 ```
